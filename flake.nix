@@ -196,6 +196,9 @@
         # agnostic ones like nixosModule and system-enumerating ones, although
         # those are more easily expressed in perSystem.
 
+        ksvnixospc = top.self.nixosConfigurations.ksvnixospc;
+        deejunixospc = top.self.nixosConfigurations.deejunixospc;
+
         nixosConfigurations.ksvnixospc = inputs.nixpkgs.lib.nixosSystem {
 
           inherit system; #system = "x86_64-linux";
@@ -205,6 +208,8 @@
             ./hosts/ksvnixospc/limine-ksvnixospc.nix
             ./hosts/ksvnixospc/hardware-configuration-ksvnixospc.nix
             inputs.home-manager.nixosModules.home-manager
+
+            { networking.hostName = "ksvnixospc"; }
 
           ] ++ (isDroidModule false) ++ commonConfigModules;
 
@@ -220,6 +225,8 @@
             ./hosts/deejunixospc/limine-deejunixospc.nix
             ./hosts/deejunixospc/hardware-configuration-deejunixospc.nix
             inputs.home-manager.nixosModules.home-manager
+
+            { networking.hostName = "deejunixospc"; }
             
           ] ++ (isDroidModule false) ++ commonConfigModules;
 
