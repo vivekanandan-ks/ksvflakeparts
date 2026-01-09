@@ -19,7 +19,6 @@
     {
       enable = true;
 
-
       # your settings need to go into the settings attribute set
       # most settings are documented in the appendix
       #the default settings can also be seen here: https://github.com/NotAShelf/nvf/blob/main/configuration.nix
@@ -88,8 +87,9 @@
             python.enable = true; # changed
             typst.enable = isMaximal;
             rust = {
-              enable = isMaximal;
-              crates.enable = isMaximal;
+              enable = true;
+              #crates.enable = true; # old option chnaged into new option below (remove this if below one works)
+              extensions.crates-nvim.enable = true;
             };
 
             # Language modules that are not as common.
@@ -137,14 +137,14 @@
           statusline = {
             lualine = {
               enable = true;
-              theme = "catppuccin";
+              #theme = "catppuccin";
             };
           };
 
           theme = {
             enable = true;
-            name = "catppuccin";
-            style = "mocha";
+            #name = "catppuccin";
+            #style = "mocha";
             transparent = true; # changed
           };
 
@@ -177,9 +177,9 @@
             whichKey.enable = true;
             cheatsheet.enable = true;
             hardtime-nvim = {
-              enable = true;
+              enable = false;
               setupOpts = {
-                restriction_mode = "hint"; #other opyions: "block"
+                #restriction_mode = "hint"; #other options: "block"
                 disable_mouse = false;
               };
 
@@ -307,8 +307,8 @@
         };
       };
     };
-  
-  home.packages = with pkgs-unstable;[
+
+  home.packages = with pkgs-unstable; [
     ueberzugpp
   ];
 

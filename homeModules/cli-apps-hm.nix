@@ -4,6 +4,7 @@
   #lib,
   #pkgs,
   pkgs-unstable,
+  #isDroid ? false,
   ...
 }:
 
@@ -32,7 +33,7 @@
     clean = {
       enable = true;
       dates = "daily";
-      extraArgs = "--keep 5 --keep-since 3d";
+      extraArgs = "--keep 3 --keep-since 3d";
     };
   };
 
@@ -80,21 +81,45 @@
     package = pkgs-unstable.gemini-cli;
   };
 
+  /*programs.nix-index = {
+    enable = true;
+    package = pkgs-unstable.nix-index;
+    enableBashIntegration = false;
+    enableFishIntegration = false;
+    enableZshIntegration = false;
+    enableNushellIntegration = true;
+  };*/
+
+  /*programs.claude-code = {
+    enable = !isDroid;
+    package = pkgs-unstable.claude-code;
+  };*/
+
+  programs.opencode = {
+    enable = true;
+    package = pkgs-unstable.opencode;
+    enableMcpIntegration = true;
+  };
+
+  /*programs.codex = {
+    enable = true;
+    package = pkgs-unstable.codex;
+  };*/
+
   # jujutsu
-  /*
-    programs.jujutsu = {
-      enable = true;
-      package = pkgs-unstable.jujutsu;
-      settings = {
-        user = {
-          email = "ksvdevksv@gmail.com";
-          name = "vivekanandan-ks";
-        };
-        #ui.editor = "micro";
-        snapshot.max-new-file-size = "10MiB"; # https://github.com/jj-vcs/jj/blob/main/docs/config.md#maximum-size-for-new-files
+
+  programs.jujutsu = {
+    enable = true;
+    package = pkgs-unstable.jujutsu;
+    settings = {
+      user = {
+        email = "ksvdevksv@gmail.com";
+        name = "vivekanandan-ks";
       };
+      #ui.editor = "micro";
+      snapshot.max-new-file-size = "30MiB"; # https://github.com/jj-vcs/jj/blob/main/docs/config.md#maximum-size-for-new-files
     };
-  */
+  };
 
   /*
     # github

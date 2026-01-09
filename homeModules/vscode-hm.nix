@@ -4,6 +4,7 @@
   pkgs-unstable,
   nix4vscode,
   system,
+  username,
   ...
 }:
 let
@@ -32,6 +33,8 @@ let
 
       "eamodio.gitlens" # GitLens
       "wakatime.vscode-wakatime" # https://wakatime.com/
+
+      "rust-lang.rust-analyzer" # rust-analyzer
 
     ])
     ++ (with pkgs-unstable.vscode-extensions; [
@@ -83,7 +86,8 @@ in
 {
   home.packages = with pkgs-unstable; [
 
-    nixfmt
+    #nixfmt
+    alejandra
     nixd
     #nil
 
@@ -120,14 +124,14 @@ in
 
         #### NixIDE
         "nix.enableLanguageServer" = true;
-        "nix.formatterPath" = "nixfmt";
+        "nix.formatterPath" = "alejandra";
         "nix.serverPath" = "nixd";
         "nix.serverSettings" = {
           "nixd" = {
             "eval" = { };
             "formatting" = {
-              "command" = "nixfmt";
-              #nixd and nixfmt to be added as packages
+              "command" = "alejandra";
+              #nixd and alejandra to be added as packages
             };
             "options" = {
               "enable" = true;
@@ -135,7 +139,7 @@ in
                 "args" = [ ];
                 ## NixOS options
                 # "installable" = "<flakeref>#nixosConfigurations.ksvnixospc.options";
-                "installable" = "${./../flake.nix}#nixosConfigurations.ksvnixospc.options";
+                "installable" = "${./../flake.nix}#nixosConfigurations.${username}.options";
                 ## Flake-parts options
                 # "installable" = "<flakeref>#debug.options";
                 ## Home-manager options

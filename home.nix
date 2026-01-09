@@ -1,9 +1,11 @@
 {
   inputs,
   #config,
-  #lib,
+  lib,
   pkgs,
   pkgs-unstable,
+  isDroid ? false,
+  username,
   ...
 }:
 
@@ -16,8 +18,10 @@ in
 
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
-  home.username = "ksvnixospc";
-  home.homeDirectory = "/home/ksvnixospc";
+  #home.username = "ksvnixospc";
+  home.username = lib.mkDefault username;
+  #home.homeDirectory = "/home/ksvnixospc";
+  home.homeDirectory = lib.mkDefault "/home/${username}";
 
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
@@ -25,23 +29,38 @@ in
 
   imports = [
     #inputs.sops-nix.homeManagerModules.sops # for standalone home manager (not for nixos HM integration)
-    ./homeModules/vscode-hm.nix
+    
     ./homeModules/shells-hm.nix
     #./homeModules/pay-respects-hm.nix
-    ./homeModules/terminals-gui-hm.nix
+    
     ./homeModules/terminal-tools-hm.nix
     ./homeModules/cli-apps-hm.nix
-    ./homeModules/gui-apps-hm.nix
     ./homeModules/micro-editor-hm.nix
     ./homeModules/nvf-hm.nix
-    ./homeModules/mpv-hm.nix
-    ./homeModules/zed-editor-hm.nix
+
     ./homeModules/mcp-hm.nix
-    ./homeModules/flatpak-hm.nix
+    ./homeModules/helix-editor-hm.nix
+    ./homeModules/zellij-hm.nix
+
+    ./homeModules/stylix-hm.nix
+    inputs.stylix.homeModules.stylix
+
+    ./homeModules/cli-packages-list-hm.nix
 
     # WMs
     #./homeModules/niri-hm.nix
     #./homeModules/hyprland-hm.nix
+
+  ] ++ lib.optionals (!isDroid) [
+    ./homeModules/gui-apps-hm.nix
+    ./homeModules/mpv-hm.nix
+    ./homeModules/flatpak-hm.nix
+    ./homeModules/zed-editor-hm.nix
+    ./homeModules/vscode-hm.nix
+    ./homeModules/terminals-gui-hm.nix
+    ./homeModules/gui-packages-list-hm.nix    
+    ./homeModules/tailscale-systray-hm.nix  
+
 
   ];
 
@@ -60,89 +79,15 @@ in
   home.packages =
     (with pkgs; [
       #stable packages
-      kdePackages.partitionmanager
-      #warp-terminal
+      
 
-    ])
+    ] )
 
     ++
+      (lib.optionals (!isDroid) (with pkgs-unstable; [
+        
 
-      (with pkgs-unstable; [
-        #unstable packages
-
-        #kde packages
-        kdePackages.kate
-        kdePackages.filelight
-        #kdePackages.poppler
-
-        poppler-utils
-
-        #nixd #nix lsp for code editors
-        # terminal apps
-        vim
-        wget
-        #wcurl
-        nano
-        git-town
-        #moar # pager like less but modern
-        #btop
-        #fastfetch
-        #bat # cat modern alternative
-        tldr # tldr-update is added in services
-        lsd
-        rip2
-        duf
-        ripgrep # grep alternative #rg is the command
-        ripgrep-all # same as ripgrep but for many file types like video, PDFs, etc etc
-        #nh
-        #gg-jj
-        #nix-index
-        #micro
-        wakatime-cli
-
-        # desktop apps
-        vlc
-        #haruna
-        euphonica
-        freetube
-        collector # drag and drop tool
-        localsend
-        qbittorrent
-        qpwgraph
-
-        # audio tool
-        #gnome-sound-recorder
-        audacity # audio tool app
-        #reco # recorder
-
-        brave
-        google-chrome
-        #firefox # declared as options in gui-apps-hm.nix
-        #tor-browser
-
-        #soundwireserver
-        podman-desktop
-        onlyoffice-desktopeditors
-        #virtualbox
-        waveterm # modern terminal app
-        warp-terminal
-        cheese # camera app
-        #zoom-us
-        #n8n
-
-        telegram-desktop
-        signal-desktop
-        #element-desktop
-        #discord
-        vesktop
-        thunderbird-latest
-
-        # KDE desktop effects addons
-        inputs.kwin-effects-forceblur.packages.${pkgs.system}.default # Wayland
-        #inputs.kwin-effects-forceblur.packages.${pkgs.system}.x11 # X11
-        #kde-rounded-corners
-
-      ]);
+      ]));
 
   programs = {
 
@@ -222,7 +167,8 @@ in
   #  /etc/profiles/per-user/ksvnixospc/etc/profile.d/hm-session-vars.sh
   #
   home.sessionVariables = {
-    EDITOR = "nvim";
+    #EDITOR = "hx";
+    #VISUAL = "hx";
     #MANPAGER = "sh -c 'col -b | bat -l man -p '"; # add -p flag to bat for plain style
     #MANPAGER = "nvim +Man! +only";
 
